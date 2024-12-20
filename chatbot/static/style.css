@@ -1,0 +1,14 @@
+/* Card view and hover effect */
+.container {
+    /* Existing styles */
+
+    /* New styles for card view */
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}

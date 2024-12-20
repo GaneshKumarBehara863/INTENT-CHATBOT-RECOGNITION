@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intent Recognition Chatbot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #a3c7df;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-top: 20px;
+        }
+
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #response-container {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .message-box {
+    display: inline-block;
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    font-size: 16px;
+}
+
+#user-bubble{
+    display: inline-block;
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    font-size: 16px;
+    background-color: #007bff; /* Change the background color for the bot's intent */
+    color: #fff; /* Change the text color */
+}
+#intent-bubble {
+    background-color: #ff5733; /* Change the background color for the bot's intent */
+    color: #fff; /* Change the text color */
+}
+
+#bot-bubble {
+    background-color: #4CAF50; /* Change the background color for the bot's response */
+    color: #fff; /* Change the text color */
+}
+
+    </style>
+</head>
+<body>
+    <h1>Intent Recognition Chatbot</h1>
+    <form id="question-form">
+        <label for="user_question">Ask a question:</label>
+        <input type="text" id="user_question" name="user_question" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response-container">
+        <div id="user-container">
+            <p class="chat-bubble" id="user-bubble"></p>
+        </div>
+        <div id="bot-intent-container">
+            <div class="message-box" id="intent-bubble">
+                <p class="chat-bubble" id="intent-text"></p>
+            </div>
+        </div>
+        <div id="bot-response-container">
+            <div class="message-box" id="bot-bubble">
+                <p class="chat-bubble" id="bot-text"></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById("question-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get the user question
+            const userQuestion = document.getElementById("user_question").value;
+
+            // Send a POST request to the Flask server
+            fetch("/get_intent", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ user_question: userQuestion }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the response container with the received data
+                document.getElementById("user-bubble").textContent = `You asked: ${userQuestion}`;
+                document.getElementById("intent-bubble").textContent = `Intent: ${data.intent_tag}`;
+                document.getElementById("bot-bubble").textContent = `Bot's Response: ${data.response}`;
+
+                // Show the response container
+                document.getElementById("response-container").style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>
